@@ -6,11 +6,13 @@ import {
   Link
 } from "react-router-dom";
 import { Pane, Heading, Button } from "evergreen-ui";
+import jwt from "jsonwebtoken";
 
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
+import Profile from "./pages/Profile";
 
 import logo from "./logo.svg";
 import "./App.css";
@@ -23,12 +25,33 @@ class App extends Component {
     isConnected: false
   };
 
+  componentDidMount(){
+    if(localStorage.getItem('token'))
+    {
+      this.setState({isConnected: true});
+      this.setState({user: jwt.decode(localStorage.getItem('token'))});
+    }
+    // if(localStorage.getItem('user')){
+    //   this.setState({user: localStorage.getItem('user')});
+    // }
+  }
+
   handleUser = user => {
     this.setState({ user, isConnected: true });
   };
 
+  logout() {
+    localStorage.removeItem('token');
+    window.location.reload();
+  }
+
   render() {
     const { user, isConnected } = this.state;
+    // console.log(localStorage.getItem('token'));
+    // if(isConnected)
+    // console.log(user.nickname);
+    // let userData = jwt.decode(localStorage.getItem('token'));
+    // console.log(userData.nickname)
 
     return (
       <Router>
@@ -52,9 +75,15 @@ class App extends Component {
               </>
             )}
             {isConnected && (
-              <Link to="/dashboard" className="App-menu">
-                <Button>Dashboard</Button>
-              </Link>
+              <>
+                <Link to="/dashboard" className="App-menu">
+                  <Button marginRight={16}>Dashboard</Button>
+                </Link>
+                <Link to="/profile" className="App-menu">
+                  <Button marginRight={16}>Profile</Button>
+                </Link>
+                <Button marginRight={16} appearance="primary" intent="danger" onClick={this.logout}>Logout</Button>
+              </>
             )}
           </Pane>
           <Route exact path="/" component={Home} />
@@ -79,10 +108,16 @@ class App extends Component {
             }}
           />
           {isConnected && (
-            <Route
-              path="/dashboard"
-              component={() => <Dashboard nickname={user.nickname} />}
-            />
+            <>
+              <Route
+                path="/profile"
+                component={() => <Profile nickname={user.nickname} />}
+              />
+              <Route
+                path="/dashboard"
+                component={() => <Dashboard nickname={user.nickname} />}
+              />
+            </>
           )}
         </>
       </Router>

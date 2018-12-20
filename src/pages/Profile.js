@@ -1,19 +1,22 @@
 import React, { Component } from "react";
 import { Pane, Text, TextInputField, Button } from "evergreen-ui";
 
-export default class SignIn extends Component {
+export default class SignUp extends Component {
   state = {
     nickname: "majdi",
-    password: "majditoumi"
+    email: "majdi@mhirba.com",
+    password: "majditoumi",
+    password_confirmation: "majditoumi"
   };
 
+  // this.handleChange = this.handleChange.bind(this);
   handleChange = evt => {
     const { name, value } = evt.target;
     this.setState({ [name]: value });
   };
 
-  login = async () => {
-    const response = await fetch("http://localhost:4242/api/auth/login", {
+  register = async () => {
+    const response = await fetch("http://localhost:4242/api/auth/register", {
       headers: {
         "Content-Type": "application/json"
       },
@@ -22,14 +25,8 @@ export default class SignIn extends Component {
     });
 
     const json = await response.json();
-    if(json.err){
-     alert(json.err)
-   }
-   else {
-     this.props.connect(json.data.user);
-     localStorage.setItem("token", json.meta.token);
-     // localStorage.setItem("user", this.state);
-   }
+    // I'M CONNECTED
+    this.props.connect(json.data.user);
   };
 
   render() {
@@ -42,13 +39,13 @@ export default class SignIn extends Component {
           float="left"
           backgroundColor="white"
           width={420}
-          height={420}
+          height={600}
           margin={24}
           padding={24}
         >
           <Pane marginBottom={42}>
             <Text>
-              <strong>Sign In</strong>
+              <strong>Sign Up</strong>
             </Text>
           </Pane>
 
@@ -57,6 +54,14 @@ export default class SignIn extends Component {
             name="nickname"
             value={nickname}
             placeholder="Sanji"
+            onChange={this.handleChange}
+            required
+          />
+          <TextInputField
+            label="Email"
+            name="email"
+            value={email}
+            placeholder="sanji@op.co"
             onChange={this.handleChange}
             required
           />
@@ -70,13 +75,22 @@ export default class SignIn extends Component {
             required
           />
 
+          <TextInputField
+            label="Password confirmation"
+            name="password_confirmation"
+            value={password_confirmation}
+            type="password"
+            onChange={this.handleChange}
+            required
+          />
+
           <Button
             marginRight={16}
             appearance="primary"
             intent="success"
-            onClick={this.login}
+            onClick={this.register}
           >
-            Login
+            Register
           </Button>
         </Pane>
       </Pane>
