@@ -1,32 +1,39 @@
 import React, { Component } from "react";
 import { Pane, Text, TextInputField, Button } from "evergreen-ui";
+import jwt from "jsonwebtoken";
 
 export default class SignUp extends Component {
   state = {
-    nickname: "majdi",
-    email: "majdi@mhirba.com",
-    password: "majditoumi",
-    password_confirmation: "majditoumi"
+    nickname: null,
+    email: null,
+    password: null,
+    password_confirmation: null
   };
 
-  // this.handleChange = this.handleChange.bind(this);
   handleChange = evt => {
     const { name, value } = evt.target;
     this.setState({ [name]: value });
   };
 
-  register = async () => {
-    const response = await fetch("http://localhost:4242/api/auth/register", {
-      headers: {
-        "Content-Type": "application/json"
-      },
-      method: "POST",
-      body: JSON.stringify(this.state)
-    });
+  componentDidMount(){
+    if(localStorage.getItem('token'))
+    {
+      this.setState({nickname: jwt.decode(localStorage.getItem('token')).password_digest});
+      this.setState({email: jwt.decode(localStorage.getItem('token')).password_digest});
+    }
+  }
 
-    const json = await response.json();
-    // I'M CONNECTED
-    this.props.connect(json.data.user);
+  update = async () => {
+    console.log(jwt.decode(localStorage.getItem('token')));
+    console.log(this.state.password);
+    console.log(this.state.password_confirmation);
+    if (!this.state.password) {
+      this.setState({password: jwt.decode(localStorage.getItem('token')).password});
+      this.setState({password_confirmation: jwt.decode(localStorage.getItem('token')).password_confirmation});
+        console.log(this.state.password);
+        console.log(this.state.password_confirmation);
+
+    }
   };
 
   render() {
@@ -45,7 +52,7 @@ export default class SignUp extends Component {
         >
           <Pane marginBottom={42}>
             <Text>
-              <strong>Sign Up</strong>
+              <strong>Update profile</strong>
             </Text>
           </Pane>
 
@@ -55,7 +62,6 @@ export default class SignUp extends Component {
             value={nickname}
             placeholder="Sanji"
             onChange={this.handleChange}
-            required
           />
           <TextInputField
             label="Email"
@@ -63,7 +69,6 @@ export default class SignUp extends Component {
             value={email}
             placeholder="sanji@op.co"
             onChange={this.handleChange}
-            required
           />
 
           <TextInputField
@@ -72,7 +77,6 @@ export default class SignUp extends Component {
             value={password}
             type="password"
             onChange={this.handleChange}
-            required
           />
 
           <TextInputField
@@ -81,16 +85,15 @@ export default class SignUp extends Component {
             value={password_confirmation}
             type="password"
             onChange={this.handleChange}
-            required
           />
 
           <Button
             marginRight={16}
             appearance="primary"
             intent="success"
-            onClick={this.register}
+            onClick={this.update}
           >
-            Register
+            Update
           </Button>
         </Pane>
       </Pane>
