@@ -24,9 +24,21 @@ export default class SignUp extends Component {
       body: JSON.stringify(this.state)
     });
 
+
     const json = await response.json();
-    // I'M CONNECTED
-    this.props.connect(json.data.user);
+    if(json.err){
+      console.log(json.err);
+      alert(json.err)
+    }
+    else {
+      this.props.connect(json.data.user);
+      localStorage.setItem("token", json.meta.token);
+      // localStorage.setItem("user", this.state);
+    }
+
+    // const json = await response.json();
+    // // I'M CONNECTED
+    // this.props.connect(json.data.user);
   };
 
   render() {

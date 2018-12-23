@@ -13,6 +13,7 @@ import Dashboard from "./pages/Dashboard";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Profile from "./pages/Profile";
+import Projects from "./pages/Projects";
 
 import logo from "./logo.svg";
 import "./App.css";
@@ -30,6 +31,9 @@ class App extends Component {
     {
       this.setState({isConnected: true});
       this.setState({user: jwt.decode(localStorage.getItem('token'))});
+      // localStorage.setItem("nickname", jwt.decode(localStorage.getItem('token')).nickname);
+      // localStorage.setItem("email", jwt.decode(localStorage.getItem('token')).email);
+      // localStorage.setItem("uuid", jwt.decode(localStorage.getItem('token')).uuid);
     }
     // if(localStorage.getItem('user')){
     //   this.setState({user: localStorage.getItem('user')});
@@ -42,6 +46,9 @@ class App extends Component {
 
   logout() {
     localStorage.removeItem('token');
+    localStorage.removeItem('nickname');
+    localStorage.removeItem('email');
+    localStorage.removeItem('uuid');
     window.location.reload();
   }
 
@@ -55,71 +62,80 @@ class App extends Component {
 
     return (
       <Router>
+      <>
+      <Pane display="flex" padding={16} background="tint2" borderRadius={3}>
+      <Pane flex={1} alignItems="center" display="flex">
+      <Link to="/" className="App-menu">
+      <Heading size={600}>Sanji server+react bootstrap</Heading>
+      </Link>
+      </Pane>
+      {!isConnected && (
         <>
-          <Pane display="flex" padding={16} background="tint2" borderRadius={3}>
-            <Pane flex={1} alignItems="center" display="flex">
-              <Link to="/" className="App-menu">
-                <Heading size={600}>Sanji server+react bootstrap</Heading>
-              </Link>
-            </Pane>
-            {!isConnected && (
-              <>
-                <Link to="/sign-in" className="App-menu">
-                  <Button marginRight={16}>Login</Button>
-                </Link>
-                <Link to="/sign-up" className="App-menu">
-                  <Button marginRight={16} appearance="primary">
-                    Sign up
-                  </Button>
-                </Link>
-              </>
-            )}
-            {isConnected && (
-              <>
-                <Link to="/dashboard" className="App-menu">
-                  <Button marginRight={16}>Dashboard</Button>
-                </Link>
-                <Link to="/profile" className="App-menu">
-                  <Button marginRight={16}>Profile</Button>
-                </Link>
-                <Button marginRight={16} appearance="primary" intent="danger" onClick={this.logout}>Logout</Button>
-              </>
-            )}
-          </Pane>
-          <Route exact path="/" component={Home} />
-          <Route
-            path="/sign-in"
-            component={() => {
-              return !isConnected ? (
-                <SignIn connect={this.handleUser} />
-              ) : (
-                <Redirect to="/dashboard" />
-              );
-            }}
-          />
-          <Route
-            path="/sign-up"
-            component={() => {
-              return !isConnected ? (
-                <SignUp connect={this.handleUser} />
-              ) : (
-                <Redirect to="/dashboard" />
-              );
-            }}
-          />
-          {isConnected && (
-            <>
-              <Route
-                path="/profile"
-                component={() => <Profile nickname={user.nickname} />}
-              />
-              <Route
-                path="/dashboard"
-                component={() => <Dashboard nickname={user.nickname} />}
-              />
-            </>
-          )}
+        <Link to="/sign-in" className="App-menu">
+        <Button marginRight={16}>Login</Button>
+        </Link>
+        <Link to="/sign-up" className="App-menu">
+        <Button marginRight={16} appearance="primary">
+        Sign up
+        </Button>
+        </Link>
         </>
+      )}
+      {isConnected && (
+        <>
+        <Link to="/dashboard" className="App-menu">
+        <Button marginRight={16}>Dashboard</Button>
+        </Link>
+        <Link to="/projects" className="App-menu">
+        <Button marginRight={16}>My Projects</Button>
+        </Link>
+        <Link to="/profile" className="App-menu">
+        <Button marginRight={16}>Profile</Button>
+        </Link>
+        <Link to="/dashboard" className="App-menu">
+        <Button marginRight={16} appearance="primary" intent="danger" onClick={this.logout}>Logout</Button>
+        </Link>
+        </>
+      )}
+      </Pane>
+      <Route exact path="/" component={Home} />
+      <Route
+      path="/sign-in"
+      component={() => {
+        return !isConnected ? (
+          <SignIn connect={this.handleUser} />
+        ) : (
+          <Redirect to="/dashboard" />
+        );
+      }}
+      />
+      <Route
+      path="/sign-up"
+      component={() => {
+        return !isConnected ? (
+          <SignUp connect={this.handleUser} />
+        ) : (
+          <Redirect to="/dashboard" />
+        );
+      }}
+      />
+      {isConnected && (
+        <>
+        <Route
+        path="/profile"
+        component={() => <Profile />}
+        />
+        <Route
+        path="/projects"
+        component={() => <Projects />}
+        />
+        <Route
+        path="/dashboard"
+        component={() => <Dashboard nickname={user.nickname} />}
+        />
+        </>
+      )}
+      </>
       </Router>
     );
   }

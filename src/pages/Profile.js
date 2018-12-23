@@ -1,11 +1,15 @@
 import React, { Component } from "react";
 import { Pane, Text, TextInputField, Button } from "evergreen-ui";
 import jwt from "jsonwebtoken";
+import {
+  Redirect,
+  Link
+} from "react-router-dom";
 
 export default class SignUp extends Component {
   state = {
-    nickname: null,
-    email: null,
+    nickname: localStorage.nickname,
+    email: localStorage.email,
     password: null,
     password_confirmation: null
   };
@@ -15,18 +19,23 @@ export default class SignUp extends Component {
     this.setState({ [name]: value });
   };
 
-  componentDidMount(){
-    if(localStorage.getItem('token'))
-    {
-      this.setState({nickname: jwt.decode(localStorage.getItem('token')).nickname});
-      this.setState({email: jwt.decode(localStorage.getItem('token')).email});
-    }
-  }
+  // componentDidMount(){
+  //   if(localStorage.getItem('token'))
+  //   {
+  //     this.setState({nickname: jwt.decode(localStorage.getItem('token')).nickname});
+  //     this.setState({email: jwt.decode(localStorage.getItem('token')).email});
+  //   }
+  // }
 
   update = async () => {
-    console.log(jwt.decode(localStorage.getItem('token')));
+    const { nickname, email } = this.state;
+    const { token } = jwt.decode(localStorage.getItem('token'));
+    // console.log(jwt.decode(localStorage.getItem('token')));
     const { uuid } = jwt.decode(localStorage.getItem('token'));
-    console.log(this.state);
+    // console.log(this.state);
+    if (this.state.nickname==='' || this.state.password==='') {
+      alert("Each field is required.")
+    } else {
     const response = await fetch(`http://localhost:4242/api/user/${uuid}`, {
       headers: {
         "Content-Type": "application/json",
@@ -39,7 +48,12 @@ export default class SignUp extends Component {
     const json = await response.json();
     if(json.err){
       alert(json.err)
+    } else {
+      alert("User updated.")
+      localStorage.nickname = nickname;
+      localStorage.usermail = email;
     }
+  }
     // console.log(this.state.nickname);
     // console.log(this.state.email);
     // if (!this.state.password) {
@@ -63,11 +77,21 @@ export default class SignUp extends Component {
       method: "DELETE",
       body: JSON.stringify(this.state)
     });
-    console.log("deletefetch");
+
     const json = await response.json();
-    if(json.err){
-      console.log(json.err)
+    if(json.error) {
+      return this.setState({ open_snack: true, variant:"error", msg: json.error});
+    } else {
+      localStorage.clear();
+      alert("User successfully deleted !")
+      window.location.reload();
     }
+
+    // console.log("deletefetch");
+    // const json = await response.json();
+    // if(json.err){
+    //   console.log(json.err)
+    // }
   }
 
   render() {
@@ -130,6 +154,7 @@ export default class SignUp extends Component {
       Update
       </Button>
 
+      <Link to="/dashboard" className="App-menu">
       <Button
       marginRight={16}
       appearance="primary"
@@ -138,6 +163,7 @@ export default class SignUp extends Component {
       >
       Delete my account
       </Button>
+      </Link>
       </Pane>
       </Pane>
     );
