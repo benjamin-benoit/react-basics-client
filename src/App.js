@@ -13,7 +13,7 @@ import Dashboard from "./pages/Dashboard";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Profile from "./pages/Profile";
-import Projects from "./pages/Projects";
+import CreateProject from "./pages/CreateProject";
 
 import logo from "./logo.svg";
 import "./App.css";
@@ -86,8 +86,8 @@ class App extends Component {
         <Link to="/dashboard" className="App-menu">
         <Button marginRight={16}>Dashboard</Button>
         </Link>
-        <Link to="/projects" className="App-menu">
-        <Button marginRight={16}>My Projects</Button>
+        <Link to="/create-project" className="App-menu">
+        <Button marginRight={16}>Create Project</Button>
         </Link>
         <Link to="/profile" className="App-menu">
         <Button marginRight={16}>Profile</Button>
@@ -126,8 +126,8 @@ class App extends Component {
         component={() => <Profile />}
         />
         <Route
-        path="/projects"
-        component={() => <Projects />}
+        path="/create-project"
+        component={() => <CreateProject />}
         />
         <Route
         path="/dashboard"

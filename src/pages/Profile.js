@@ -101,11 +101,10 @@ export default class SignUp extends Component {
       <Pane clearfix>
       <Pane
       elevation={1}
-      float="left"
       backgroundColor="white"
       width={420}
       height={600}
-      margin={24}
+      margin="auto"
       padding={24}
       >
       <Pane marginBottom={42}>
