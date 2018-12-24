@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Pane, Text, TextInputField, Button } from "evergreen-ui";
+import jwt from "jsonwebtoken";
 
 export default class SignUp extends Component {
   state = {
@@ -29,6 +30,18 @@ export default class SignUp extends Component {
     } else {
       this.props.connect(json.data.user);
       localStorage.setItem("token", json.meta.token);
+      localStorage.setItem(
+        "nickname",
+        jwt.decode(localStorage.getItem("token")).nickname
+      );
+      localStorage.setItem(
+        "email",
+        jwt.decode(localStorage.getItem("token")).email
+      );
+      localStorage.setItem(
+        "uuid",
+        jwt.decode(localStorage.getItem("token")).uuid
+      );
     }
   };
 

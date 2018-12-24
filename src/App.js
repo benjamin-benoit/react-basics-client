@@ -14,6 +14,7 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Profile from "./pages/Profile";
 import CreateProject from "./pages/CreateProject";
+import UpdateProject from "./pages/UpdateProject";
 
 import logo from "./logo.svg";
 import "./App.css";
@@ -112,19 +113,34 @@ class App extends Component {
               );
             }}
           />
-          {isConnected && (
-            <>
-              <Route path="/profile" component={() => <Profile />} />
-              <Route
-                path="/create-project"
-                component={() => <CreateProject />}
-              />
-              <Route
-                path="/dashboard"
-                component={() => <Dashboard isConnected={isConnected} />}
-              />
-            </>
-          )}
+          <Route
+            path="/profile"
+            component={() => {
+              return isConnected ? <Profile /> : <Redirect to="/" />;
+            }}
+          />
+          <Route
+            path="/create-project"
+            component={() => {
+              return isConnected ? <CreateProject /> : <Redirect to="/" />;
+            }}
+          />
+          <Route
+            path="/update-project"
+            component={() => {
+              return isConnected ? <UpdateProject /> : <Redirect to="/" />;
+            }}
+          />
+          <Route
+            path="/dashboard"
+            component={() => {
+              return isConnected ? (
+                <Dashboard isConnected={isConnected} />
+              ) : (
+                <Redirect to="/" />
+              );
+            }}
+          />
         </>
       </Router>
     );
