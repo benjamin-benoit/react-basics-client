@@ -6,19 +6,16 @@ const Home = () => (
     elevation={1}
     float="left"
     backgroundColor="white"
-    width={420}
+    width="100%"
     height={240}
-    margin={24}
+    margin="auto"
     display="flex"
     justifyContent="center"
     alignItems="center"
     flexDirection="column"
   >
-    <Text>
-      <strong>Home</strong>
-    </Text>
     <Text size={300}>
-      <strong>Hello, world</strong>
+      <strong>Hello, welcome on Sanji, you can login or register if you want manage your projects.</strong>
     </Text>
   </Pane>
 );

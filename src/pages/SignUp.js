@@ -3,13 +3,12 @@ import { Pane, Text, TextInputField, Button } from "evergreen-ui";
 
 export default class SignUp extends Component {
   state = {
-    nickname: "majdi",
-    email: "majdi@mhirba.com",
-    password: "majditoumi",
-    password_confirmation: "majditoumi"
+    nickname: "",
+    email: "",
+    password: "",
+    password_confirmation: ""
   };
 
-  // this.handleChange = this.handleChange.bind(this);
   handleChange = evt => {
     const { name, value } = evt.target;
     this.setState({ [name]: value });
@@ -24,21 +23,13 @@ export default class SignUp extends Component {
       body: JSON.stringify(this.state)
     });
 
-
     const json = await response.json();
-    if(json.err){
-      console.log(json.err);
-      alert(json.err)
-    }
-    else {
+    if (json.err) {
+      alert(json.err);
+    } else {
       this.props.connect(json.data.user);
       localStorage.setItem("token", json.meta.token);
-      // localStorage.setItem("user", this.state);
     }
-
-    // const json = await response.json();
-    // // I'M CONNECTED
-    // this.props.connect(json.data.user);
   };
 
   render() {
@@ -48,11 +39,10 @@ export default class SignUp extends Component {
       <Pane clearfix>
         <Pane
           elevation={1}
-          float="left"
           backgroundColor="white"
           width={420}
           height={600}
-          margin={24}
+          margin="auto"
           padding={24}
         >
           <Pane marginBottom={42}>
